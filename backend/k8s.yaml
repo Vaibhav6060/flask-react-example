@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flask-backend
+  template:
+    metadata:
+      labels:
+        app: flask-backend
+    spec:
+      containers:
+      - name: flask-backend
+        image: 018092639542.dkr.ecr.eu-north-1.amazonaws.com/flask-react-backend:latest
+        ports:
+        - containerPort: 5555
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+spec:
+  selector:
+    app: flask-backend
+  ports:
+  - port: 80
+    targetPort: 5555
+  type: LoadBalancer
