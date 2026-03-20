@@ -23,7 +23,7 @@ H = highlight_io.H(
 
 @app.route("/")
 def hello_world():
-    logging.info("hello, Vaibhav!")
+    logging.info("hello, diwate!")
     return "<p>Hello, Vaibhav</p>"
 
 
