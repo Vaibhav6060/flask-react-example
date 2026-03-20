@@ -23,8 +23,8 @@ H = highlight_io.H(
 
 @app.route("/")
 def hello_world():
-    logging.info("hello, world!")
-    return "<p>Hello, World</p>"
+    logging.info("hello, Vaibhav!")
+    return "<p>Hello, Vaibhav</p>"
 
 
 @app.route("/json")
