@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: flask-backend
-        image: 018092639542.dkr.ecr.eu-north-1.amazonaws.com/flask-react-backend:latest
+        image: 018092639542.dkr.ecr.eu-north-1.amazonaws.com/flask-react-backend
+        imagePullPolicy: Always
         ports:
         - containerPort: 5555
 
