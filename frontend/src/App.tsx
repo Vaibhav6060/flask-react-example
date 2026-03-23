@@ -1,4 +1,6 @@
 import { useState } from "react";
+import reactLogo from "/react.svg";
+import flaskLogo from "/flask.svg";
 import "./App.css";
 
 function App() {
@@ -8,47 +10,40 @@ function App() {
   const backendUrl =
     import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5555";
 
-  const fetchHealth = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${backendUrl}/`);
-      const text = await res.text();
-      setResponse({ message: text });
-    } catch (err) {
-      setResponse({ error: "Backend not reachable ❌" });
-    }
-    setLoading(false);
-  };
-
-  const fetchJson = async () => {
+  const fetchData = async () => {
     setLoading(true);
     try {
       const res = await fetch(`${backendUrl}/json`);
       const data = await res.json();
       setResponse(data);
     } catch (err) {
-      setResponse({ error: "Error fetching JSON ❌" });
+      setResponse({ error: "Backend not reachable ❌" });
     }
     setLoading(false);
   };
 
   return (
     <div className="container">
-      <h1>🚀 DevOps Dashboard</h1>
-      <p>React + Flask + AWS Project</p>
-
-      <div className="buttons">
-        <button onClick={fetchHealth}>
-          🔍 Check Backend Status
-        </button>
-
-        <button onClick={fetchJson}>
-          📡 Get API Data
-        </button>
+      {/* 🔥 Top Logos */}
+      <div className="logos">
+        <img src={reactLogo} className="logo react" />
+        <span className="plus">+</span>
+        <img src={flaskLogo} className="logo flask" />
       </div>
 
-      {loading && <p>⏳ Loading...</p>}
+      {/* Title */}
+      <h1>🚀 DevOps Project Dashboard</h1>
+      <p>React Frontend + Flask Backend</p>
 
+      {/* Button */}
+      <button onClick={fetchData}>
+        📡 Fetch Backend Data
+      </button>
+
+      {/* Loading */}
+      {loading && <p className="loading">⏳ Loading...</p>}
+
+      {/* Response */}
       {response && (
         <div className="response">
           <h3>Response:</h3>
