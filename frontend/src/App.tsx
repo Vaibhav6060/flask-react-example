@@ -1,82 +1,61 @@
-import { useState, useEffect } from "react";
-import reactLogo from "/react.svg";
-import highlightLogo from "/highlight.svg";
-import flaskLogo from "/flask.svg";
-import { H } from "highlight.run";
+import { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [response, setResponse] = useState();
-  const [error, setError] = useState<Error>();
+  const [response, setResponse] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-      const interval = setInterval(async () => {
-          try {
-              await fetch(`${import.meta.env.VITE_APP_BACKEND_URL ?? 'http://localhost:5555'}/error`)
-          } catch(e) { console.error(e) }
-      }, 1000)
-      return () => {
-          return clearInterval(interval)
-      }
-  }, [])
+  const backendUrl =
+    import.meta.env.VITE_APP_BACKEND_URL || "http://localhost:5555";
 
-  if (error) {
-    throw error;
-  }
+  const fetchHealth = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${backendUrl}/`);
+      const text = await res.text();
+      setResponse({ message: text });
+    } catch (err) {
+      setResponse({ error: "Backend not reachable ❌" });
+    }
+    setLoading(false);
+  };
 
-    return (
-    <>
-      <div>
-        <a href="https://highlight.io" target="_blank">
-          <img src={highlightLogo} className="logo" alt="Highlight logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-        <a href="https://flask.palletsprojects.com/en/3.0.x" target="_blank">
-          <img src={flaskLogo} className="logo" alt="Python Flask logo" />
-        </a>
-      </div>
-      <h1>highlight.io with React -{">"} Python Flask</h1>
-      <div className="card">
-        <button
-          onClick={async () => {
-            setCount((count) => count + 1);
-            H.identify("jay@highlight.io", {
-              id: "very-secure-id",
-              phone: "867-5309",
-              bestFriend: "jenny",
-            });
-            try {
-              const r = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL ?? 'http://localhost:5555'}/`);
-              await r.text();
-            } catch (e) {
-              setError(e as unknown as Error);
-            }
-          }}
-        >
-          count is {count}
+  const fetchJson = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${backendUrl}/json`);
+      const data = await res.json();
+      setResponse(data);
+    } catch (err) {
+      setResponse({ error: "Error fetching JSON ❌" });
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="container">
+      <h1>🚀 DevOps Dashboard</h1>
+      <p>React + Flask + AWS Project</p>
+
+      <div className="buttons">
+        <button onClick={fetchHealth}>
+          🔍 Check Backend Status
         </button>
-        <button
-          onClick={async () => {
-            H.track("calling backend", { count });
-            try {
-              const r = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL ?? 'http://localhost:5555'}/json`);
-              setResponse(await r.json());
-            } catch (e) {
-              setError(e as unknown as Error);
-            }
-          }}
-        >
-          Send Backend Request
+
+        <button onClick={fetchJson}>
+          📡 Get API Data
         </button>
-        {response && <div className="response">{JSON.stringify(response)}</div>}
       </div>
-      <p className="read-the-docs">
-        Click the logo to learn more.
-      </p>
-    </>
+
+      {loading && <p>⏳ Loading...</p>}
+
+      {response && (
+        <div className="response">
+          <h3>Response:</h3>
+          <pre>{JSON.stringify(response, null, 2)}</pre>
+        </div>
+      )}
+    </div>
   );
 }
 
